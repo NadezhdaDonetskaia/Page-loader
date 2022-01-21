@@ -10,9 +10,10 @@ asciicast must be
 #### My tests
 [![pytest](https://github.com/Nella611/python-project-lvl3/actions/workflows/tests.yml/badge.svg)](https://github.com/Nella611/python-project-lvl3/actions/workflows/tests.yml)
 
-#### Codeclimate
-<a href="https://codeclimate.com/github/Nella611/python-project-lvl3/maintainability"><img src="https://api.codeclimate.com/v1/badges/546c57269da69c2b655d/maintainability" /></a>
-##### Покрытие тестами:
-<a href="https://codeclimate.com/github/Nella611/python-project-lvl3/test_coverage"><img src="https://api.codeclimate.com/v1/badges/546c57269da69c2b655d/test_coverage" /></a>
+#### Codeclimate and Coverage
+|----:|:----:|:----------|
+| Codeclimate | <a href="https://codeclimate.com/github/Nella611/python-project-lvl3/maintainability"><img src="https://api.codeclimate.com/v1/badges/546c57269da69c2b655d/maintainability" /></a> |
+| Coverage | <a href="https://codeclimate.com/github/Nella611/python-project-lvl3/test_coverage"><img src="https://api.codeclimate.com/v1/badges/546c57269da69c2b655d/test_coverage" /></a> |
+|----:|:----:|:----------|
 
 
