@@ -2,7 +2,7 @@
 #### description
 
 #### Installation:
-asciicast must be
+[![asciicast](https://asciinema.org/a/WlD4SgjwRfAFnkWVomxeLJq6W.svg)](https://asciinema.org/a/WlD4SgjwRfAFnkWVomxeLJq6W)
 
 | Atcions | Status|
 |---|---|
