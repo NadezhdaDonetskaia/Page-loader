@@ -7,14 +7,14 @@ parser = argparse.ArgumentParser(description='Page loader,',
 parser.add_argument('page_url', metavar='page_url',
                     help='page url for download')
 parser.add_argument('-f', '--output', dest='OUTPUT',
-                    default='current_directory',
+                    default='',
                     help='enter download directory')
 
 args = parser.parse_args()
 
 
 def main():
-    download(args.OUTPUT, args.page_url)
+    print(download(args.page_url, args.OUTPUT))
 
 
 if __name__ == '__main__':

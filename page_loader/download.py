@@ -4,13 +4,13 @@ import requests
 
 
 def get_file_name(page_url):
-    file_name = page_url.split('//')[1]
+    file_name, ext = os.path.splitext(page_url.split('//')[1])
     file_name = re.sub("[^A-Za-z0-9]", "-", file_name) + '.html'
     return file_name
 
 
 def get_data(page_url):
-    data = requests.get(page_url)
+    data = requests.Session().get(page_url)
     return data.text
 
 
@@ -21,11 +21,11 @@ def write_file(path, data):
         f.write(data)
 
 
-def download(download_path, page_url):
+def download(page_url, download_path):
     file_name = get_file_name(page_url)
-    if download_path == 'current_directory':
+    if not download_path:
         download_path = os.getcwd()
     file_path = os.path.join(download_path, file_name)
     data = get_data(page_url)
     write_file(file_path, data)
-    print(file_name)
+    return file_name
