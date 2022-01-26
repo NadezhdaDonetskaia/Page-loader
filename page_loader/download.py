@@ -1,6 +1,9 @@
 import os
 import re
 import requests
+from urllib.parse import urlparse, urljoin
+from urllib.request import urlretrieve
+from bs4 import BeautifulSoup
 
 
 def get_url_without_scheme(url):
@@ -25,6 +28,34 @@ def write_file(path, data):
         f.write(data)
 
 
+def get_base_url(url):
+    url = urlparse(url)
+    return os.path.join(f'{url.scheme}://', url.netloc)
+
+
+def get_images_link(data, base_url):
+    soup = BeautifulSoup(data, 'html.parser')
+    images = soup.find_all('img')
+    images_links = []
+    for image in images:
+        src = image.get('src')
+        if not src.startswith('http'):
+            src = urljoin(base_url, src)
+            images_links.append(src)
+    return images_links
+
+
+def download_images(images_links, dir_path):
+    for link in images_links:
+        images_name = get_url_without_scheme(link)
+        images_name, exp = get_correct_name_and_ext(images_name)
+        images_name = images_name + exp
+        image_path = os.path.join(dir_path, images_name)
+        image = requests.Session().get(link)
+        with open(image_path, 'wb') as f:
+            f.write(image.content)
+
+
 def download(page_url, download_path):
     url_without_scheme = get_url_without_scheme(page_url)
     file_name, _ = get_correct_name_and_ext(url_without_scheme)
@@ -37,4 +68,9 @@ def download(page_url, download_path):
     # создание папки для картинок
     download_folder = os.path.join(download_path, file_name + '_files')
     os.mkdir(download_folder)
+    # узнаем базовую url
+    base_url = get_base_url(page_url)
+    # записываем файлы в папку
+    images_link = get_images_link(data, base_url)
+    download_images(images_link, download_folder)
     return file_name
