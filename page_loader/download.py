@@ -2,7 +2,6 @@ import os
 import re
 import requests
 from urllib.parse import urlparse, urljoin
-from urllib.request import urlretrieve
 from bs4 import BeautifulSoup
 
 
@@ -56,6 +55,10 @@ def download_images(images_links, dir_path):
             f.write(image.content)
 
 
+def set_scr():
+    pass
+
+
 def download(page_url, download_path):
     url_without_scheme = get_url_without_scheme(page_url)
     file_name, _ = get_correct_name_and_ext(url_without_scheme)
@@ -73,4 +76,5 @@ def download(page_url, download_path):
     # записываем файлы в папку
     images_link = get_images_link(data, base_url)
     download_images(images_link, download_folder)
+    # заменяем ссылки в новом html
     return file_name
