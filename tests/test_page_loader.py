@@ -13,6 +13,7 @@ created_img = os.path.join(created_dir, 'ru-hexlet-io-assets-professions-nodejs.
 expected_file = os.path.join(test_dirname, 'fixtures', 'must_be', created_html_file)
 expected_dir = os.path.join(test_dirname, 'fixtures', 'must_be', created_dir)
 expected_img = os.path.join(test_dirname, 'fixtures', 'must_be', created_img)
+expected_script = os.path.join(expected_dir, 'ru-hexlet-io-packs-js-runtime.js')
 page_url = 'https://ru.hexlet.io/courses'
 image_url = 'https://ru.hexlet.io/assets/professions/nodejs.png'
 
@@ -21,6 +22,7 @@ parameters_exists = [
     created_html_file,
     created_dir,
     created_img,
+    expected_script,
 ]
 
 
@@ -52,7 +54,7 @@ def test_page_is_download():
                     expected_path = os.path.join(directory, created_html_file)
                     with open(expected_path) as f:
                         with open(expected_file) as exp_f:
-                            assert exp_f.read() == f.read()
+                            assert f.read() == exp_f.read()
 
 
 def test_images_is_download():
@@ -67,4 +69,4 @@ def test_images_is_download():
                     download(page_url, directory)
                     expected_path = os.path.join(directory, created_img)
                     with open(expected_path, 'rb') as img:
-                        assert exp_img == img.read()
+                        assert img.read() == exp_img

@@ -36,6 +36,7 @@ def get_images_path(data, base_url):
     images_paths = []
     for image in images:
         src = image.get('src')
+        # добавть проверку не на http, а на тот же хост
         if not src.startswith('http'):
             src = urljoin(base_url, src)
             images_paths.append(src)
