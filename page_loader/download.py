@@ -55,8 +55,18 @@ def download_images(images_links, dir_path):
             f.write(image.content)
 
 
-def set_scr():
-    pass
+# нужен список новых линков
+# объединить с парсером?
+def changed_links(file, new_path):
+    with open(file, 'r') as fp:
+        f = fp.read()
+    soup = BeautifulSoup(f, features="html.parser")
+    for image in soup.find_all('img'):
+        for link in new_path:
+            image['src'] = link
+    soup = soup.prettify()
+    with open(file, 'w') as f:
+        f.write(soup)
 
 
 def download(page_url, download_path):
@@ -77,4 +87,5 @@ def download(page_url, download_path):
     images_link = get_images_link(data, base_url)
     download_images(images_link, download_folder)
     # заменяем ссылки в новом html
+    
     return file_name
