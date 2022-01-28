@@ -33,21 +33,21 @@ parameters_exists = [
 ]
 
 
-# @pytest.mark.parametrize('expected_name', parameters_exists)
-# def test_new_file_is_created(expected_name):
-#     with open(file_for_download) as f:
-#         exp_data = f.read()
-#         with open(expected_img, 'rb') as image:
-#             exp_img = image.read()
-#             with requests_mock.Mocker() as mock:
-#                 mock.get(page_url, text=exp_data)
-#                 mock.get(image_url, content=exp_img)
-#                 mock.get(script_url, content=exp_img)
-#                 mock.get(link1_url, content=exp_img)
-#                 with tempfile.TemporaryDirectory() as directory:
-#                     download(page_url, directory)
-#                     expected_path = os.path.join(directory, expected_name)
-#                     assert os.path.exists(expected_path)
+@pytest.mark.parametrize('expected_name', parameters_exists)
+def test_new_file_is_created(expected_name):
+    with open(file_for_download) as f:
+        exp_data = f.read()
+        with open(expected_img, 'rb') as image:
+            exp_img = image.read()
+            with requests_mock.Mocker() as mock:
+                mock.get(page_url, text=exp_data)
+                mock.get(image_url, content=exp_img)
+                mock.get(script_url, content=exp_img)
+                mock.get(link1_url, content=exp_img)
+                with tempfile.TemporaryDirectory() as directory:
+                    download(page_url, directory)
+                    expected_path = os.path.join(directory, expected_name)
+                    assert os.path.exists(expected_path)
 
 
 def test_page_is_download():
@@ -66,20 +66,20 @@ def test_page_is_download():
                     with open(expected_path) as f:
                         with open(expected_file) as exp_f:
                             assert f.read() == exp_f.read()
-# 
-# 
-# def test_images_is_download():
-#     with open(file_for_download) as f:
-#         exp_data = f.read()
-#         with open(expected_img, 'rb') as image:
-#             exp_img = image.read()
-#             with requests_mock.Mocker() as mock:
-#                 mock.get(page_url, text=exp_data)
-#                 mock.get(image_url, content=exp_img)
-#                 mock.get(script_url, content=exp_img)
-#                 mock.get(link1_url, content=exp_img)
-#                 with tempfile.TemporaryDirectory() as directory:
-#                     download(page_url, directory)
-#                     expected_path = os.path.join(directory, created_img)
-#                     with open(expected_path, 'rb') as img:
-#                         assert img.read() == exp_img
+
+
+def test_images_is_download():
+    with open(file_for_download) as f:
+        exp_data = f.read()
+        with open(expected_img, 'rb') as image:
+            exp_img = image.read()
+            with requests_mock.Mocker() as mock:
+                mock.get(page_url, text=exp_data)
+                mock.get(image_url, content=exp_img)
+                mock.get(script_url, content=exp_img)
+                mock.get(link1_url, content=exp_img)
+                with tempfile.TemporaryDirectory() as directory:
+                    download(page_url, directory)
+                    expected_path = os.path.join(directory, created_img)
+                    with open(expected_path, 'rb') as img:
+                        assert img.read() == exp_img

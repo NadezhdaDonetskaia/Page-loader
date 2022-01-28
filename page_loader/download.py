@@ -38,19 +38,22 @@ def download_link(file, download_folder, scheme, host, tags_and_attributes=TAGS_
 
     def get_download_and_replace_link(search_tag, atr):
         tags = page_data.find_all(search_tag)
+
+        def replace_link(link_):
+            new_name = download_page(link_, download_folder, child=True)
+            name_download_folder = os.path.basename(download_folder)
+            tag[atr] = os.path.join(name_download_folder, new_name)
+
         for tag in tags:
             link = tag.get(atr)
             if link:
                 _, link_netloc = get_scheme_and_netloc_url(link)
                 if host in link_netloc:
-                    new_name = download_page(link, download_folder, child=True)
-                    name_download_folder = os.path.relpath(os.getcwd())
-                    tag[atr] = os.path.join(name_download_folder, new_name)
+                    replace_link(link)
                 elif not link.startswith(scheme):
                     link = urljoin(f'{scheme}://{host}', link)
-                    new_name = download_page(link, download_folder, child=True)
-                    name_download_folder = os.path.relpath(os.getcwd())
-                    tag[atr] = os.path.join(name_download_folder, new_name)
+                    replace_link(link)
+
     with open(file) as f:
         page_data = BeautifulSoup(f, 'html.parser')
     for tag, attrs in tags_and_attributes.items():
@@ -63,10 +66,12 @@ def download_link(file, download_folder, scheme, host, tags_and_attributes=TAGS_
 
 def download_page(page_url, download_path, child=False):
     url_without_scheme = get_url_without_scheme(page_url)
-    file_name, _ = get_correct_name_and_ext(url_without_scheme)
+    file_name, exp = get_correct_name_and_ext(url_without_scheme)
     if not download_path:
         download_path = os.getcwd()
-    file_path = os.path.join(download_path, file_name + '.html')
+    if not exp:
+        exp = '.html'
+    file_path = os.path.join(download_path, file_name + exp)
     data = get_data(page_url, child)
     if child:
         with open(file_path, 'wb') as f:
@@ -78,12 +83,8 @@ def download_page(page_url, download_path, child=False):
         os.mkdir(download_folder)
         scheme, netloc = get_scheme_and_netloc_url(page_url)
         download_link(file_path, download_folder, scheme, netloc)
-    return file_name
+    return file_name + exp
 
 
 def download(page_url, download_path):
     return download_page(page_url, download_path)
-
-
-# заменить папку для скачинвания (не полный путь, а относительный)
-# проверить, что там с расширениями у файлов
