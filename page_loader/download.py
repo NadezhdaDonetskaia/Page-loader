@@ -6,10 +6,8 @@ from bs4 import BeautifulSoup
 
 
 TAGS_AND_ATTRIBUTES = {
-        'img': ('src', 'href'),
-        'script': ('src',),
-        'link': ('src', 'href'),
-    }
+    'img': ('src', 'href'), 'script': ('src',), 'link': ('src', 'href'),
+}
 
 
 def get_url_without_scheme(url):
@@ -34,31 +32,31 @@ def get_scheme_and_netloc_url(url):
     return url.scheme, url.netloc
 
 
+def download_and_replace_link(link, tag, atr, download_folder):
+    new_name = download_page(link, download_folder, child=True)
+    name_download_folder = os.path.basename(download_folder)
+    tag[atr] = os.path.join(name_download_folder, new_name)
+
+
 def download_link(file, download_folder, scheme, host, tags_and_attributes=TAGS_AND_ATTRIBUTES):
 
-    def get_download_and_replace_link(search_tag, atr):
+    def get_link(search_tag, atr):
         tags = page_data.find_all(search_tag)
-
-        def replace_link(link_):
-            new_name = download_page(link_, download_folder, child=True)
-            name_download_folder = os.path.basename(download_folder)
-            tag[atr] = os.path.join(name_download_folder, new_name)
-
         for tag in tags:
             link = tag.get(atr)
             if link:
                 _, link_netloc = get_scheme_and_netloc_url(link)
                 if host in link_netloc:
-                    replace_link(link)
+                    download_and_replace_link(link, tag, atr, download_folder)
                 elif not link.startswith(scheme):
                     link = urljoin(f'{scheme}://{host}', link)
-                    replace_link(link)
+                    download_and_replace_link(link, tag, atr, download_folder)
 
     with open(file) as f:
         page_data = BeautifulSoup(f, 'html.parser')
     for tag, attrs in tags_and_attributes.items():
         for attr in attrs:
-            get_download_and_replace_link(tag, attr)
+            get_link(tag, attr)
     page_data = page_data.prettify()
     with open(file, 'w') as f:
         f.write(page_data)
