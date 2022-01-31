@@ -1,17 +1,21 @@
 import os
+import sys
 import re
 import requests
+import logging
 from urllib.parse import urlparse, urljoin
 from bs4 import BeautifulSoup
+
+Log_Format = "%(name)s - %(levelname)s - %(message)s"
+logging.basicConfig(stream=sys.stdout,
+                    format=Log_Format,
+                    level=logging.ERROR)
+logger = logging.getLogger(__name__)
 
 
 TAGS_AND_ATTRIBUTES = {
     'img': ('src', 'href'), 'script': ('src',), 'link': ('src', 'href'),
 }
-
-
-def get_url_without_scheme(url):
-    return url.split('//')[1]
 
 
 def get_correct_name_and_ext(page_url):
@@ -63,7 +67,11 @@ def download_link(file, download_folder, scheme, host, tags_and_attributes=TAGS_
 
 
 def download_page(page_url, download_path, child=False):
-    url_without_scheme = get_url_without_scheme(page_url)
+    # sys.stdout
+    # попробовать вывод скачиваемых файлов
+    # logger.debug('Вывод команды:\n{}'.format(output))
+    # logger.info
+    url_without_scheme = page_url.split('//')[1]
     file_name, exp = get_correct_name_and_ext(url_without_scheme)
     if not download_path:
         download_path = os.getcwd()
@@ -78,9 +86,15 @@ def download_page(page_url, download_path, child=False):
         with open(file_path, 'w') as f:
             f.write(data)
         download_folder = os.path.join(download_path, file_name + '_files')
-        os.mkdir(download_folder)
+        try:
+            os.mkdir(download_folder)
+        except FileExistsError as e:
+            logger.debug(e.strerror)
         scheme, netloc = get_scheme_and_netloc_url(page_url)
-        download_link(file_path, download_folder, scheme, netloc)
+        try:
+            download_link(file_path, download_folder, scheme, netloc)
+        except OSError as e:
+            logger.debug(e, exc_info=True)
     return file_name + exp
 
 
