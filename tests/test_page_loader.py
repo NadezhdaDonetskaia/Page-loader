@@ -1,13 +1,9 @@
 import os
 import tempfile
 import pytest
-import logging.config
 import requests_mock
 from page_loader import download
 
-logging.config.fileConfig(fname='logger_config.cnf', disable_existing_loggers=False)
-logger = logging.getLogger(__name__)
-# logger.setLevel(logging.DEBUG)
 
 test_dirname = os.path.dirname(__file__)
 file_for_download = os.path.join(test_dirname, 'fixtures', 'for_download', 'ru-hexlet-io-courses.html')
