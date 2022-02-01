@@ -1,5 +1,4 @@
 import os
-import sys
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, urljoin
 import logging.config
