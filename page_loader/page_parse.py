@@ -1,6 +1,8 @@
 import os
+import sys
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, urljoin
+import logging.config
 from .is_same_domain import is_same_domain
 from .download_link import download_link
 
@@ -10,6 +12,10 @@ TAGS_AND_ATTRIBUTES = {
     'script': ('src',),
     'link': ('src', 'href'),
 }
+
+
+logging.config.fileConfig(fname='logger_config.cnf', disable_existing_loggers=False)
+logger = logging.getLogger(__name__)
 
 
 def add_scheme(url, parent_domain):

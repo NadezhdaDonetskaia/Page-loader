@@ -1,19 +1,14 @@
 import os
-import sys
-import logging
 from urllib.parse import urlparse
 from .download_link import download_link
 from .page_parse import page_parse
 from .get_correct_name import get_correct_folder_name
 
-Log_Format = "%(name)s - %(levelname)s - %(message)s"
-logging.basicConfig(stream=sys.stdout,
-                    format=Log_Format,
-                    level=logging.ERROR)
+import logging.config
+
+
+logging.config.fileConfig(fname='logger_config.cnf', disable_existing_loggers=False)
 logger = logging.getLogger(__name__)
-
-
-
 
 
 def download_page(page_url, download_path):

@@ -2,6 +2,11 @@ import os
 from urllib.parse import urlparse
 import requests
 from .get_correct_name import get_correct_file_name
+import logging.config
+
+
+logging.config.fileConfig(fname='logger_config.cnf', disable_existing_loggers=False)
+logger = logging.getLogger(__name__)
 
 
 def get_data(page_url):
@@ -16,4 +21,5 @@ def download_link(page_url, download_path):
     data = get_data(page_url)
     with open(file_path, 'wb') as f:
         f.write(data)
+    logger.info(f'File {file_name} downloaded')
     return file_name

@@ -1,18 +1,13 @@
 import os
-import sys
 import tempfile
 import pytest
-import logging
+import logging.config
 import requests_mock
 from page_loader import download
 
-
-Log_Format = "%(process)d - %(levelname)s - %(name)s - %(module)s - % (funcName)s - %(message)s"
-logging.basicConfig(stream=sys.stdout,
-                    format=Log_Format,
-                    level=logging.DEBUG)
+logging.config.fileConfig(fname='logger_config.cnf', disable_existing_loggers=False)
 logger = logging.getLogger(__name__)
-
+# logger.setLevel(logging.DEBUG)
 
 test_dirname = os.path.dirname(__file__)
 file_for_download = os.path.join(test_dirname, 'fixtures', 'for_download', 'ru-hexlet-io-courses.html')
@@ -44,19 +39,23 @@ parameters_exists = [
 
 @pytest.mark.parametrize('expected_name', parameters_exists)
 def test_new_file_is_created(expected_name):
-    with open(file_for_download, 'rb') as f:
-        exp_data = f.read()
-        with open(expected_img, 'rb') as image:
-            exp_img = image.read()
-            with requests_mock.Mocker() as mock:
-                mock.get(page_url, content=exp_data)
-                mock.get(image_url, content=exp_img)
-                mock.get(script_url, content=exp_img)
-                mock.get(link1_url, content=exp_img)
-                with tempfile.TemporaryDirectory() as directory:
-                    download(page_url, directory)
-                    expected_path = os.path.join(directory, expected_name)
-                    assert os.path.exists(expected_path)
+    logger.info(f'Test {expected_name} is exist')
+    try:
+        with open(file_for_download, 'rb') as f:
+            exp_data = f.read()
+            with open(expected_img, 'rb') as image:
+                exp_img = image.read()
+                with requests_mock.Mocker() as mock:
+                    mock.get(page_url, content=exp_data)
+                    mock.get(image_url, content=exp_img)
+                    mock.get(script_url, content=exp_img)
+                    mock.get(link1_url, content=exp_img)
+                    with tempfile.TemporaryDirectory() as directory:
+                        download(page_url, directory)
+                        expected_path = os.path.join(directory, expected_name)
+                        assert os.path.exists(expected_path)
+    except OSError as e:
+        logger.error(e, exc_info=True)
 
 
 def test_page_is_download():

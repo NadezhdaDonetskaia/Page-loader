@@ -2,7 +2,11 @@
 import sys
 import argparse
 from page_loader import download
-import logging
+import logging.config
+
+
+logging.config.fileConfig(fname='logger_config.cnf', disable_existing_loggers=False)
+logger = logging.getLogger(__name__)
 
 parser = argparse.ArgumentParser(description='Page loader',
                                  prog='page-loader', usage='%(prog)s [options] <url>')
@@ -15,17 +19,17 @@ parser.add_argument('-o', '--output',
 args = parser.parse_args()
 
 
-Log_Format = "%(name)s - %(levelname)s - %(message)s"
+Log_Format = "%(message)s"
 logging.basicConfig(stream=sys.stdout,
                     format=Log_Format,
-                    level=logging.ERROR)
+                    level=logging.INFO)
 
 logger = logging.getLogger(__name__)
 
 
 def main():
     try:
-        print(download(args.page_url, args.output))
+        download(args.page_url, args.output)
     except OSError as e:
         logger.error(e, exc_info=True)
 
