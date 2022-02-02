@@ -5,7 +5,7 @@ from page_loader import download
 import logging.config
 
 
-# logging.config.fileConfig()
+logging.config.fileConfig(fname='logger_config.cnf', disable_existing_loggers=False)
 logger = logging.getLogger(__name__)
 
 parser = argparse.ArgumentParser(description='Page loader',
@@ -30,8 +30,10 @@ logger = logging.getLogger(__name__)
 def main():
     try:
         download(args.page_url, args.output)
+        sys.exit(0)
     except OSError as e:
-        logger.error(e, exc_info=True)
+        logger.error(e.strerror)
+        raise SystemExit(e.strerror)
 
 
 if __name__ == '__main__':

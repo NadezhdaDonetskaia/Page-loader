@@ -73,3 +73,23 @@ def test_link_is_download(new_file, exp_file):
             download(page_url, directory)
             new_file = os.path.join(directory, new_file)
             assert read_file(new_file) == read_file(exp_file)
+
+
+def test_folder_not_exist(capsys):
+    with pytest.raises(SystemExit) as err:
+        directory = os.path.join(expected_dir, 'not-exist')
+        download(page_url, directory)
+    assert err.value.code == 1
+
+
+status_code = [400, 403, 404, 500, 502, 503, ]
+
+
+@pytest.mark.parametrize('status_code', status_code)
+def test_status_code(status_code):
+    with pytest.raises(SystemExit) as err:
+        with requests_mock.Mocker() as mock:
+            mock.get(page_url, content=read_file(file_for_download), status_code=status_code)
+            with tempfile.TemporaryDirectory() as directory:
+                download(page_url, directory)
+    assert err.value.code == 1

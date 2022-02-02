@@ -15,9 +15,12 @@ logger = logging.getLogger(__name__)
 def download_page(page_url, download_path):
     if not download_path:
         download_path = os.getcwd()
+    if not os.path.exists(download_path):
+        logger.error(f'Folder {download_path} is not exist, try again')
+        sys.exit(1)
     file_name = download_link(page_url, download_path)
     if not file_name:
-        logger.info(f'Failed to download page {page_url}')
+        logger.error(f'Failed to download page {page_url}')
         sys.exit(1)
     file_path = os.path.join(download_path, file_name)
     folder_name = get_correct_folder_name(file_name)
@@ -25,7 +28,7 @@ def download_page(page_url, download_path):
     try:
         os.mkdir(download_folder)
         logger.info(f'Folder {download_folder} created')
-    except FileExistsError as e:
+    except FileExistsError:
         logger.info(f'Folder {download_folder} exist')
     with open(file_path, 'r') as f:
         data = f.read()

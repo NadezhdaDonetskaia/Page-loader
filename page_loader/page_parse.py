@@ -1,7 +1,6 @@
 import os
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, urljoin
-import logging.config
 from .is_same_domain import is_same_domain
 from .download_link import download_link
 

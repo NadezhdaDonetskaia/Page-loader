@@ -14,16 +14,12 @@ def get_data(page_url):
         r = requests.get(page_url, timeout=3)
         r.raise_for_status()
     except requests.exceptions.HTTPError as errh:
-        logger.info(f'Code status {r.status_code}\n"Http Error:"', errh)
         logger.error(errh, exc_info=True)
     except requests.exceptions.ConnectionError as errc:
-        logger.info(f'Code status {r.status_code}\n"Http Error:"', errc)
         logger.error(errc, exc_info=True)
     except requests.exceptions.Timeout as errt:
-        logger.info(f'Code status {r.status_code}\n"Http Error:"', errt)
         logger.error(errt, exc_info=True)
     except requests.exceptions.RequestException as err:
-        logger.info(f'Code status {r.status_code}\n"Http Error:"', err)
         logger.error(err, exc_info=True)
     else:
         logger.debug(f'Code status {r.status_code}')
