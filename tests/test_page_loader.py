@@ -11,79 +11,65 @@ created_html_file = 'ru-hexlet-io-courses.html'
 created_dir = 'ru-hexlet-io-courses_files'
 page_url = 'https://ru.hexlet.io/courses'
 image_url = 'https://ru.hexlet.io/assets/professions/nodejs.png'
-link1_url = 'https://ru.hexlet.io/assets/application.css'
-link2_url = page_url
+css_url = 'https://ru.hexlet.io/assets/application.css'
 script_url = 'https://ru.hexlet.io/packs/js/runtime.js'
-created_img = os.path.join(created_dir, 'ru-hexlet-io-assets-professions-nodejs.png')
+created_css = os.path.join(created_dir, 'ru-hexlet-io-assets-application.css')
+created_png = os.path.join(created_dir, 'ru-hexlet-io-assets-professions-nodejs.png')
+created_js = os.path.join(created_dir, 'ru-hexlet-io-packs-js-runtime.js')
+created_html = os.path.join(created_dir, 'ru-hexlet-io-courses.html')
 expected_file = os.path.join(test_dirname, 'fixtures', 'must_be', created_html_file)
 expected_dir = os.path.join(test_dirname, 'fixtures', 'must_be', created_dir)
-expected_img = os.path.join(test_dirname, 'fixtures', 'must_be', created_img)
-expected_script = os.path.join(expected_dir, 'ru-hexlet-io-packs-js-runtime.js')
-expected_link1 = os.path.join(expected_dir, 'ru-hexlet-io-assets-application.css')
-expected_link2 = os.path.join(expected_dir, created_html_file)
+expected_png = os.path.join(test_dirname, 'fixtures', 'must_be', created_png)
+expected_js = os.path.join(expected_dir, 'ru-hexlet-io-packs-js-runtime.js')
+expected_css = os.path.join(expected_dir, 'ru-hexlet-io-assets-application.css')
+expected_html = os.path.join(expected_dir, created_html_file)
+
+
+def read_file(file):
+    with open(file, 'rb') as f:
+        return f.read()
 
 
 parameters_exists = [
     created_html_file,
     created_dir,
-    expected_img,
-    expected_script,
-    expected_link1,
-    expected_link2,
+    created_png,
+    created_js,
+    created_css,
+    created_html,
 ]
 
 
 @pytest.mark.parametrize('expected_name', parameters_exists)
 def test_new_file_is_created(expected_name):
-    logger.info(f'Test {expected_name} is exist')
-    try:
-        with open(file_for_download, 'rb') as f:
-            exp_data = f.read()
-            with open(expected_img, 'rb') as image:
-                exp_img = image.read()
-                with requests_mock.Mocker() as mock:
-                    mock.get(page_url, content=exp_data)
-                    mock.get(image_url, content=exp_img)
-                    mock.get(script_url, content=exp_img)
-                    mock.get(link1_url, content=exp_img)
-                    with tempfile.TemporaryDirectory() as directory:
-                        download(page_url, directory)
-                        expected_path = os.path.join(directory, expected_name)
-                        assert os.path.exists(expected_path)
-    except OSError as e:
-        logger.error(e, exc_info=True)
+    with requests_mock.Mocker() as mock:
+        mock.get(page_url, content=read_file(file_for_download))
+        mock.get(image_url, content=read_file(expected_png))
+        mock.get(script_url, content=read_file(expected_js))
+        mock.get(css_url, content=read_file(expected_css))
+        with tempfile.TemporaryDirectory() as directory:
+            download(page_url, directory)
+            expected_path = os.path.join(directory, expected_name)
+            assert os.path.exists(expected_path)
 
 
-def test_page_is_download():
-    with open(file_for_download, 'r') as f:
-        exp_data = f.read()
-        with open(expected_img, 'rb') as image:
-            exp_img = image.read()
-            with requests_mock.Mocker() as mock:
-                mock.get(page_url, text=exp_data)
-                mock.get(image_url, content=exp_img)
-                mock.get(script_url, content=exp_img)
-                mock.get(link1_url, content=exp_img)
-                with tempfile.TemporaryDirectory() as directory:
-                    download(page_url, directory)
-                    expected_path = os.path.join(directory, created_html_file)
-                    with open(expected_path) as f:
-                        with open(expected_file) as exp_f:
-                            assert f.read() == exp_f.read()
+parameters = [
+    (created_html_file, expected_file),
+    (created_css, expected_css),
+    (created_png, expected_png),
+    (created_html, expected_html),
+    (created_js, expected_js),
+]
 
 
-def test_images_is_download():
-    with open(file_for_download, 'r') as f:
-        exp_data = f.read()
-        with open(expected_img, 'rb') as image:
-            exp_img = image.read()
-            with requests_mock.Mocker() as mock:
-                mock.get(page_url, text=exp_data)
-                mock.get(image_url, content=exp_img)
-                mock.get(script_url, content=exp_img)
-                mock.get(link1_url, content=exp_img)
-                with tempfile.TemporaryDirectory() as directory:
-                    download(page_url, directory)
-                    expected_path = os.path.join(directory, created_img)
-                    with open(expected_path, 'rb') as img:
-                        assert img.read() == exp_img
+@pytest.mark.parametrize('new_file, exp_file', parameters)
+def test_link_is_download(new_file, exp_file):
+    with requests_mock.Mocker() as mock:
+        mock.get(page_url, content=read_file(file_for_download))
+        mock.get(image_url, content=read_file(expected_png))
+        mock.get(script_url, content=read_file(expected_js))
+        mock.get(css_url, content=read_file(expected_css))
+        with tempfile.TemporaryDirectory() as directory:
+            download(page_url, directory)
+            new_file = os.path.join(directory, new_file)
+            assert read_file(new_file) == read_file(exp_file)

@@ -13,10 +13,6 @@ TAGS_AND_ATTRIBUTES = {
 }
 
 
-logging.config.fileConfig(fname='logger_config.cnf', disable_existing_loggers=False)
-logger = logging.getLogger(__name__)
-
-
 def add_scheme(url, parent_domain):
     url = urlparse(url)
     if not url.scheme:
@@ -34,8 +30,9 @@ def page_parse(data, download_folder, parent_domain):
             if is_same_domain(link, parent_domain):
                 link = add_scheme(link, parent_domain)
                 new_name = download_link(link, download_folder)
-                name_download_folder = os.path.basename(download_folder)
-                tag[atr] = os.path.join(name_download_folder, new_name)
+                if new_name:
+                    name_download_folder = os.path.basename(download_folder)
+                    tag[atr] = os.path.join(name_download_folder, new_name)
 
     page_data = BeautifulSoup(data, 'html.parser')
     for tag, attrs in TAGS_AND_ATTRIBUTES.items():

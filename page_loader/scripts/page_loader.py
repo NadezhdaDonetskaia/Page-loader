@@ -5,7 +5,7 @@ from page_loader import download
 import logging.config
 
 
-logging.config.fileConfig(fname='logger_config.cnf', disable_existing_loggers=False)
+# logging.config.fileConfig()
 logger = logging.getLogger(__name__)
 
 parser = argparse.ArgumentParser(description='Page loader',
