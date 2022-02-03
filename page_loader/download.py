@@ -27,9 +27,9 @@ def download_page(page_url, download_path):
     download_folder = os.path.join(download_path, folder_name)
     try:
         os.mkdir(download_folder)
-        logger.info(f'Folder {download_folder} created')
+        logger.debug(f'Folder {download_folder} created')
     except FileExistsError:
-        logger.info(f'Folder {download_folder} exist')
+        logger.debug(f'Folder {download_folder} exist')
     with open(file_path, 'r') as f:
         data = f.read()
     data = page_parse(data, download_folder, urlparse(page_url))
