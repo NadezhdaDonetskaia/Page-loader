@@ -11,5 +11,3 @@ def progress_downloader(path, data, file_name):
             f.write(chunk)
             progress.next()
     progress.finish()
-
-
