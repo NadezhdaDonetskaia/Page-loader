@@ -82,14 +82,14 @@ def test_folder_not_exist(capsys):
     assert err.value.code == 1
 
 
-status_code = [400, 403, 404, 500, 502, 503, ]
+errors = [400, 503]
 
 
-@pytest.mark.parametrize('status_code', status_code)
+@pytest.mark.parametrize('status_code', errors)
 def test_status_code(status_code):
-    with pytest.raises(SystemExit) as err:
+    with pytest.raises(SystemExit) as error:
         with requests_mock.Mocker() as mock:
             mock.get(page_url, content=read_file(file_for_download), status_code=status_code)
             with tempfile.TemporaryDirectory() as directory:
                 download(page_url, directory)
-    assert err.value.code == 1
+    assert error.value.code == 1

@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 import sys
+from os import path
 import argparse
 from page_loader import download
 import logging.config
 
 
-logging.config.fileConfig(fname='logger_config.cnf', disable_existing_loggers=False)
-logger = logging.getLogger(__name__)
+# log_file_path = path.join(path.dirname(path.abspath(__file__)), 'logger_config.cnf')
+# logging.config.fileConfig(log_file_path, disable_existing_loggers=False)
+# logger = logging.getLogger(__name__)
 
 parser = argparse.ArgumentParser(description='Page loader',
                                  prog='page-loader', usage='%(prog)s [options] <url>')
@@ -17,7 +19,6 @@ parser.add_argument('-o', '--output',
                     help='output dir (default: current folder)')
 
 args = parser.parse_args()
-
 
 Log_Format = "%(message)s"
 logging.basicConfig(stream=sys.stdout,

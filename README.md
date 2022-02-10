@@ -3,7 +3,8 @@
 
 #### Installation:
 [![asciicast](https://asciinema.org/a/WlD4SgjwRfAFnkWVomxeLJq6W.svg)](https://asciinema.org/a/WlD4SgjwRfAFnkWVomxeLJq6W)
-
+### application work
+[![asciicast](https://asciinema.org/a/gFCCjv2c3izOBN5NVLWsA6myT.svg)](https://asciinema.org/a/gFCCjv2c3izOBN5NVLWsA6myT)
 | Atcions | Status|
 |---|---|
 | Linter status | [![linter](https://github.com/Nella611/python-project-lvl3/actions/workflows/push.yml/badge.svg)](https://github.com/Nella611/python-project-lvl3/actions/workflows/push.yml) |
