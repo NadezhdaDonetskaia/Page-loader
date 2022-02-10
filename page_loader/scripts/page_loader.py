@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import sys
-from os import path
 import argparse
 from page_loader import download
 import logging.config
