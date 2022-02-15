@@ -52,22 +52,20 @@ def test_link_is_download(new_file, exp_file):
             new_file = os.path.join(directory, new_file)
             assert read_file(new_file) == read_file(exp_file)
 
-#
-# def test_folder_not_exist():
-#     with pytest.raises(Exception) as err:
-#         directory = os.path.join(expected_dir, 'not-exist')
-#         download(page_url, directory)
-#     # assert err.value.code == 1
-#
-#
-# errors = [400, 503]
-#
-#
-# @pytest.mark.parametrize('status_code', errors)
-# def test_status_code(status_code):
-#     with pytest.raises(URLError) as error:
-#         with requests_mock.Mocker() as mock:
-#             mock.get(page_url, content=read_file(file_for_download), status_code=status_code)
-#             with tempfile.TemporaryDirectory() as directory:
-#                 download(page_url, directory)
-#     # assert error.value.code == 1
+
+def test_folder_not_exist():
+    with pytest.raises(Exception) as err:
+        directory = os.path.join(expected_dir, 'not-exist')
+        download(page_url, directory)
+
+
+errors = [400, 503]
+
+
+@pytest.mark.parametrize('status_code', errors)
+def test_status_code(status_code):
+    with pytest.raises(URLError) as error:
+        with requests_mock.Mocker() as mock:
+            mock.get(page_url, content=read_file(file_for_download), status_code=status_code)
+            with tempfile.TemporaryDirectory() as directory:
+                download(page_url, directory)

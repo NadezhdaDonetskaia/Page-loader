@@ -18,7 +18,7 @@ def download(page_url, download_path):
         logger.error(f'Folder {download_path} is not exist, try again')
         raise OSError(f'Folder {download_path} is not exist, try again')
     file_name = download_link(page_url, download_path)
-    if not isinstance(file_name, requests.models.Response):
+    if not isinstance(file_name, str):
         logger.error(f'Failed to download page {page_url}')
         raise URLError(file_name)
     file_path = os.path.join(download_path, file_name)
@@ -34,4 +34,5 @@ def download(page_url, download_path):
     data = page_parse(data, download_folder, urlparse(page_url))
     with open(file_path, 'w') as f:
         f.write(data)
+    print(file_path)
     return file_path

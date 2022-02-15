@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 
 def main():
     try:
-        print(download(args.page_url, args.output))
+        download(args.page_url, args.output)
         sys.exit(0)
     except URLError as e:
         logger.error(e.strerror)
