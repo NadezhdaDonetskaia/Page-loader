@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import sys
+import os
 import argparse
+from urllib.error import URLError
 from page_loader import download
 import logging.config
 
@@ -14,7 +16,7 @@ parser = argparse.ArgumentParser(description='Page loader',
 parser.add_argument('page_url', metavar='<url>',
                     help='enter page address'
                     )
-parser.add_argument('-o', '--output',
+parser.add_argument('-o', '--output', default=os.getcwd(),
                     help='output dir (default: current folder)')
 
 args = parser.parse_args()
@@ -29,11 +31,16 @@ logger = logging.getLogger(__name__)
 
 def main():
     try:
-        download(args.page_url, args.output)
+        print(download(args.page_url, args.output))
         sys.exit(0)
-    except OSError as e:
+    except URLError as e:
         logger.error(e.strerror)
-        raise SystemExit(e.strerror)
+        print(e.strerror)
+        sys.exit(1)
+    except Exception as e:
+        logger.error(e)
+        print(e)
+        sys.exit(1)
 
 
 if __name__ == '__main__':
