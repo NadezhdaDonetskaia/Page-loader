@@ -2,7 +2,7 @@
 import sys
 import os
 import argparse
-from urllib.error import URLError
+from requests.exceptions import HTTPError
 from page_loader import download
 import logging.config
 
@@ -33,13 +33,8 @@ def main():
     try:
         download(args.page_url, args.output)
         sys.exit(0)
-    except URLError as e:
-        logger.error(e.strerror)
-        print(e.strerror)
-        sys.exit(1)
-    except Exception as e:
-        logger.error(e)
-        print(e)
+    except(HTTPError, Exception) as e:
+        print(str(e))
         sys.exit(1)
 
 

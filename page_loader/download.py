@@ -1,6 +1,5 @@
 import os
 from urllib.parse import urlparse
-from urllib.error import URLError
 from .download_link import download_link
 from .page_parse import page_parse
 from .get_correct_name import get_correct_folder_name
@@ -19,7 +18,7 @@ def download(page_url, download_path):
     file_name = download_link(page_url, download_path)
     if not isinstance(file_name, str):
         logger.error(f'Failed to download page {page_url}')
-        raise URLError(file_name)
+        raise file_name
     file_path = os.path.join(download_path, file_name)
     folder_name = get_correct_folder_name(file_name)
     download_folder = os.path.join(download_path, folder_name)

@@ -14,17 +14,20 @@ def get_data(page_url):
     try:
         r = requests.get(page_url, timeout=3, stream=True)
         r.raise_for_status()
+    except requests.exceptions.Timeout as errt:
+        logger.debug(errt)
+        return errt
+    except requests.exceptions.TooManyRedirects as errr:
+        logger.debug(errr)
+        return errr
     except requests.exceptions.HTTPError as errh:
-        logger.error(errh.strerror)
+        logger.debug(errh)
         return errh
     except requests.exceptions.ConnectionError as errc:
-        logger.error(errc.strerror)
+        logger.debug(errc)
         return errc
-    except requests.exceptions.Timeout as errt:
-        logger.error(errt.strerror)
-        return errt
     except requests.exceptions.RequestException as err:
-        logger.error(err.strerror)
+        logger.debug(err)
         return err
     else:
         logger.debug(f'Code status {r.status_code}')
