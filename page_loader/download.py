@@ -1,7 +1,6 @@
 import os
 from urllib.parse import urlparse
 from urllib.error import URLError
-import requests
 from .download_link import download_link
 from .page_parse import page_parse
 from .get_correct_name import get_correct_folder_name
