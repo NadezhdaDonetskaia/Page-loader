@@ -1,13 +1,9 @@
 import os
 from urllib.parse import urlparse
 import requests
-import logging.config
 from .get_correct_name import get_correct_file_name
 from .progress_downloader import progress_downloader
-
-
-# logging.config.fileConfig()
-logger = logging.getLogger(__name__)
+from .logger_config import logger
 
 
 def get_data(page_url):
@@ -27,7 +23,7 @@ def get_data(page_url):
         logger.debug(str(errc))
         return errc
     except requests.exceptions.RequestException as err:
-        logger.debug(str(err))
+        logger.exception(str(err))
         return err
     else:
         logger.debug(f'Code status {r.status_code}')

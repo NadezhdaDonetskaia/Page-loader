@@ -3,12 +3,7 @@ from urllib.parse import urlparse
 from .download_link import download_link
 from .page_parse import page_parse
 from .get_correct_name import get_correct_folder_name
-
-import logging.config
-
-
-# logging.config.fileConfig()
-logger = logging.getLogger(__name__)
+from .logger_config import logger
 
 
 def download(page_url, download_path):
@@ -17,7 +12,7 @@ def download(page_url, download_path):
         raise OSError(f'Folder {download_path} is not exist, try again')
     file_name = download_link(page_url, download_path)
     if not isinstance(file_name, str):
-        logger.error(f'Failed to download page {page_url} \n{file_name}')
+        logger.error(f'Failed to download page {page_url} \n{file_name}', exc_info=True)
         raise file_name
     file_path = os.path.join(download_path, file_name)
     folder_name = get_correct_folder_name(file_name)

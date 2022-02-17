@@ -4,12 +4,7 @@ import os
 import argparse
 from requests.exceptions import HTTPError, Timeout, ConnectionError, RequestException, TooManyRedirects
 from page_loader import download
-import logging.config
-
-
-# log_file_path = path.join(path.dirname(path.abspath(__file__)), 'logger_config.cnf')
-# logging.config.fileConfig(log_file_path, disable_existing_loggers=False)
-# logger = logging.getLogger(__name__)
+from ..logger_config import logger
 
 parser = argparse.ArgumentParser(description='Page loader',
                                  prog='page-loader', usage='%(prog)s [options] <url>')
@@ -20,13 +15,6 @@ parser.add_argument('-o', '--output', default=os.getcwd(),
                     help='output dir (default: current folder)')
 
 args = parser.parse_args()
-
-Log_Format = "%(message)s"
-logging.basicConfig(stream=sys.stdout,
-                    format=Log_Format,
-                    level=logging.INFO)
-
-logger = logging.getLogger(__name__)
 
 
 def main():
