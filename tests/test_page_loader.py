@@ -84,7 +84,7 @@ exc = [
 
 @requests_mock.Mocker(kw='mock')
 @pytest.mark.parametrize('exception, exc_val', exc)
-def test_status_code(exception, exc_val, tmpdir, **kwargs):
+def test_exception(exception, exc_val, tmpdir, **kwargs):
     with pytest.raises(Exception) as error:
         kwargs['mock'].get(page_url, exc=exception)
         download(page_url, tmpdir)
