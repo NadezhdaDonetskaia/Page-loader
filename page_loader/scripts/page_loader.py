@@ -2,7 +2,7 @@
 import sys
 import os
 import argparse
-from requests.exceptions import HTTPError
+from requests.exceptions import HTTPError, Timeout, ConnectionError, RequestException, TooManyRedirects
 from page_loader import download
 import logging.config
 
@@ -33,7 +33,10 @@ def main():
     try:
         download(args.page_url, args.output)
         sys.exit(0)
-    except(HTTPError, Exception) as e:
+    except(Timeout, ConnectionError, TooManyRedirects, HTTPError, RequestException):
+        logger.debug('Requests exceptions')
+        sys.exit(1)
+    except Exception as e:
         print(str(e))
         sys.exit(1)
 

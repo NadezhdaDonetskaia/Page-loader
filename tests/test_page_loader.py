@@ -38,24 +38,24 @@ parameters = [
     (created_js, expected_js),
 ]
 
-#
-# @requests_mock.Mocker(kw='mock')
-# @pytest.mark.parametrize('new_file, exp_file', parameters)
-# def test_link_is_download(new_file, exp_file, tmpdir, **kwargs):
-#     kwargs['mock'].get(page_url, content=read_file(file_for_download))
-#     kwargs['mock'].get(image_url, content=read_file(expected_png))
-#     kwargs['mock'].get(script_url, content=read_file(expected_js))
-#     kwargs['mock'].get(css_url, content=read_file(expected_css))
-#     download(page_url, tmpdir)
-#     new_file = os.path.join(tmpdir, new_file)
-#     assert read_file(new_file) == read_file(exp_file)
-#
-#
-# def test_folder_not_exist():
-#     with pytest.raises(OSError) as e:
-#         directory = os.path.join(expected_dir, 'not-exist')
-#         download(page_url, directory)
-#     assert str(e.value) == f'Folder {directory} is not exist, try again'
+
+@requests_mock.Mocker(kw='mock')
+@pytest.mark.parametrize('new_file, exp_file', parameters)
+def test_link_is_download(new_file, exp_file, tmpdir, **kwargs):
+    kwargs['mock'].get(page_url, content=read_file(file_for_download))
+    kwargs['mock'].get(image_url, content=read_file(expected_png))
+    kwargs['mock'].get(script_url, content=read_file(expected_js))
+    kwargs['mock'].get(css_url, content=read_file(expected_css))
+    download(page_url, tmpdir)
+    new_file = os.path.join(tmpdir, new_file)
+    assert read_file(new_file) == read_file(exp_file)
+
+
+def test_folder_not_exist():
+    with pytest.raises(OSError) as e:
+        directory = os.path.join(expected_dir, 'not-exist')
+        download(page_url, directory)
+    assert str(e.value) == f'Folder {directory} is not exist, try again'
 
 
 errors = [
@@ -63,11 +63,29 @@ errors = [
     (503, f'503 Server Error: None for url: {page_url}'),
 ]
 
-# .side_effect = Timeout
+
 @requests_mock.Mocker(kw='mock')
-@pytest.mark.parametrize('status_code, err', errors)
-def test_status_code(status_code, err, tmpdir, **kwargs):
+@pytest.mark.parametrize('status_code, err_val', errors)
+def test_status_code(status_code, err_val, tmpdir, **kwargs):
     with pytest.raises(Exception) as error:
         kwargs['mock'].get(page_url, status_code=status_code)
         download(page_url, tmpdir)
-    assert str(error.value) == err
+    assert str(error.value) == err_val
+
+
+exc = [
+    (Timeout, 'Timeout'),
+    (ConnectionError, 'ConnectionError'),
+    (RequestException, 'RequestException'),
+    (TooManyRedirects, 'TooManyRedirects'),
+    (HTTPError, 'HTTPError'),
+]
+
+
+@requests_mock.Mocker(kw='mock')
+@pytest.mark.parametrize('exception, exc_val', exc)
+def test_status_code(exception, exc_val, tmpdir, **kwargs):
+    with pytest.raises(Exception) as error:
+        kwargs['mock'].get(page_url, exc=exception)
+        download(page_url, tmpdir)
+    assert str(error.typename) == exc_val

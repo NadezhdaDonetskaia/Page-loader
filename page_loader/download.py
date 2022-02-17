@@ -17,7 +17,7 @@ def download(page_url, download_path):
         raise OSError(f'Folder {download_path} is not exist, try again')
     file_name = download_link(page_url, download_path)
     if not isinstance(file_name, str):
-        logger.error(f'Failed to download page {page_url}')
+        logger.error(f'Failed to download page {page_url} \n{file_name}')
         raise file_name
     file_path = os.path.join(download_path, file_name)
     folder_name = get_correct_folder_name(file_name)
