@@ -19,7 +19,7 @@ args = parser.parse_args()
 
 def main():
     try:
-        download(args.page_url, args.output)
+        print(download(args.page_url, args.output))
         sys.exit(0)
     except(Timeout, ConnectionError, TooManyRedirects, HTTPError, RequestException):
         logger.debug('Requests exceptions')

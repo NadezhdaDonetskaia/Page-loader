@@ -27,5 +27,4 @@ def download(page_url, download_path):
     data = page_parse(data, download_folder, urlparse(page_url))
     with open(file_path, 'w') as f:
         f.write(data)
-    print(file_path)
     return file_path

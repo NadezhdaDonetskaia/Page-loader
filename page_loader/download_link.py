@@ -12,19 +12,19 @@ def get_data(page_url):
         r.raise_for_status()
     except requests.exceptions.Timeout as errt:
         logger.debug(str(errt))
-        return errt
+        raise requests.exceptions.Timeout('Connect or Read Timeout!')
     except requests.exceptions.TooManyRedirects as errr:
         logger.debug(str(errr))
-        return errr
-    except requests.exceptions.HTTPError as errh:
-        logger.debug(str(errh))
-        return errh
+        raise requests.exceptions.TooManyRedirects('Too many redirects')
     except requests.exceptions.ConnectionError as errc:
         logger.debug(str(errc))
-        return errc
+        raise requests.exceptions.ConnectionError('A Connection error occurred')
+    except requests.exceptions.HTTPError as errh:
+        logger.debug(str(errh))
+        raise requests.exceptions.HTTPError('HTTP Error occurred')
     except requests.exceptions.RequestException as err:
         logger.exception(str(err))
-        return err
+        raise requests.exceptions.RequestException('Other request exceptions occurred')
     else:
         logger.debug(f'Code status {r.status_code}')
         return r
