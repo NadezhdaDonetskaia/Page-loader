@@ -1,44 +1,16 @@
 import os
 from urllib.parse import urlparse
-import requests
-from .get_correct_name import get_correct_file_name
-from .progress_downloader import progress_downloader
+from .get_correct_name.get_correct_file_name import get_correct_file_name
+from .get_response import get_response
 from .logger_config import logger
-
-
-def get_data(page_url):
-    try:
-        r = requests.get(page_url, timeout=3, stream=True)
-        r.raise_for_status()
-    except requests.exceptions.Timeout as errt:
-        logger.debug(str(errt))
-        raise requests.exceptions.Timeout('Connect or Read Timeout!')
-    except requests.exceptions.TooManyRedirects as errr:
-        logger.debug(str(errr))
-        raise requests.exceptions.TooManyRedirects('Too many redirects')
-    except requests.exceptions.ConnectionError as errc:
-        logger.debug(str(errc))
-        raise requests.exceptions.ConnectionError('A Connection error occurred')
-    except requests.exceptions.HTTPError as errh:
-        logger.debug(str(errh))
-        raise requests.exceptions.HTTPError('HTTP Error occurred')
-    except requests.exceptions.RequestException as err:
-        logger.exception(str(err))
-        raise requests.exceptions.RequestException('Other request exceptions occurred')
-    else:
-        logger.debug(f'Code status {r.status_code}')
-        return r
 
 
 def download_link(page_url, download_path):
     url_splitting = urlparse(page_url)
     file_name = get_correct_file_name(url_splitting)
     file_path = os.path.join(download_path, file_name)
-    data = get_data(page_url)
-    if not isinstance(data, requests.models.Response):
-        logger.debug(f'Failed to download file {file_name}')
-        return data
-    else:
-        progress_downloader(file_path, data, file_name)
-        logger.debug(f'File {file_name} downloaded')
-        return file_name
+    response = get_response(page_url)
+    with open(file_path, 'wb') as f:
+        f.write(response.content)
+    logger.debug(f'File {file_name} downloaded')
+    return file_name

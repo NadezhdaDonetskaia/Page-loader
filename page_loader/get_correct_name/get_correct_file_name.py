@@ -9,8 +9,3 @@ def get_correct_file_name(url_splitting):
     if not ext:
         ext = '.html'
     return name + ext
-
-
-def get_correct_folder_name(name):
-    file_name, ext = os.path.splitext(name)
-    return file_name + '_files'

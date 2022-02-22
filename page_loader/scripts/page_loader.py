@@ -4,7 +4,7 @@ import os
 import argparse
 from requests.exceptions import HTTPError, Timeout, ConnectionError, RequestException, TooManyRedirects
 from page_loader import download
-from ..logger_config import logger
+
 
 parser = argparse.ArgumentParser(description='Page loader',
                                  prog='page-loader', usage='%(prog)s [options] <url>')
@@ -21,11 +21,26 @@ def main():
     try:
         print(download(args.page_url, args.output))
         sys.exit(0)
-    except(Timeout, ConnectionError, TooManyRedirects, HTTPError, RequestException):
-        logger.debug('Requests exceptions')
+    except Timeout as errt:
+        print(errt)
         sys.exit(1)
-    except Exception as e:
-        print(str(e))
+    except ConnectionError as errc:
+        print(errc)
+        sys.exit(1)
+    except TooManyRedirects as errr:
+        print(errr)
+        sys.exit(1)
+    except HTTPError as errh:
+        print(errh)
+        sys.exit(1)
+    except RequestException as err:
+        print(err)
+        sys.exit(1)
+    except OSError as erros:
+        print(erros)
+        sys.exit(1)
+    except Exception:
+        print('Something went wrong')
         sys.exit(1)
 
 
