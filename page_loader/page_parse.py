@@ -20,7 +20,7 @@ def add_scheme(url, parent_domain):
     return url.geturl()
 
 
-def page_parse(data, download_folder, parent_domain):
+def page_parse(response, download_folder, parent_domain):
 
     def get_link(search_tag, atr):
         tags = page_data.find_all(search_tag)
@@ -29,11 +29,10 @@ def page_parse(data, download_folder, parent_domain):
             if is_same_domain(link, parent_domain):
                 link = add_scheme(link, parent_domain)
                 new_name = download_link(link, download_folder)
-                if new_name:
-                    name_download_folder = os.path.basename(download_folder)
-                    tag[atr] = os.path.join(name_download_folder, new_name)
+                name_download_folder = os.path.basename(download_folder)
+                tag[atr] = os.path.join(name_download_folder, new_name)
 
-    page_data = BeautifulSoup(data, 'html.parser')
+    page_data = BeautifulSoup(response.content, 'html.parser')
     for tag, attrs in TAGS_AND_ATTRIBUTES.items():
         for attr in attrs:
             get_link(tag, attr)
