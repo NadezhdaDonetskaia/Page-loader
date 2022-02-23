@@ -1,6 +1,5 @@
 import os
 import pytest
-import requests_mock
 from requests.exceptions import HTTPError, Timeout, ConnectionError, RequestException, TooManyRedirects
 from page_loader import download
 

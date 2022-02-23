@@ -1,11 +1,10 @@
 import os
 from bs4 import BeautifulSoup
 from .get_correct_name.get_correct_file_name import get_correct_file_name
-from .download_link import download_link
-from .page_parse import get_link_for_download, changed_link
+from .page_parse import get_link_for_download
 from .get_correct_name.get_correct_folder_name import get_correct_folder_name
 from .get_response import get_response
-from .add_scheme import add_scheme
+from .progress_downloader import progress_downloader
 from .logger_config import logger
 
 
@@ -28,16 +27,7 @@ def download(page_url, download_path):
         logger.debug(err)
         raise err
     links_for_download = get_link_for_download(page_data, page_url)
-    for link, tag, atr in links_for_download:
-        try:
-            new_link = add_scheme(link, page_url)
-            new_name_link = download_link(new_link, download_folder)
-            name_download_folder = os.path.basename(download_folder)
-            new_path = os.path.join(name_download_folder, new_name_link)
-            changed_link(page_data, tag, atr, link, new_path)
-        except Exception as err:
-            logger.debug(err)
-            print(f'Link {link} not downloaded: {err}')
+    progress_downloader(links_for_download, page_url, download_folder, page_data)
     page_data = page_data.prettify()
     with open(file_path, 'w') as f:
         f.write(page_data)
