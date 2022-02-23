@@ -2,7 +2,7 @@
 import sys
 import os
 import argparse
-from requests.exceptions import HTTPError, Timeout, ConnectionError, RequestException, TooManyRedirects
+from requests.exceptions import RequestException
 from page_loader import download
 
 
@@ -21,22 +21,12 @@ def main():
     try:
         print(download(args.page_url, args.output))
         sys.exit(0)
-    except Timeout as errt:
-        print(errt)
-        sys.exit(1)
-    except ConnectionError as errc:
-        print(errc)
-        sys.exit(1)
-    except TooManyRedirects as errr:
-        print(errr)
-        sys.exit(1)
-    except HTTPError as errh:
-        print(errh)
-        sys.exit(1)
     except RequestException as err:
+        print('The request failed')
         print(err)
         sys.exit(1)
     except OSError as erros:
+        print('System error')
         print(erros)
         sys.exit(1)
     except Exception:

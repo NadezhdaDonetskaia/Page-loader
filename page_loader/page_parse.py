@@ -1,8 +1,6 @@
-import os
-from bs4 import BeautifulSoup
-from urllib.parse import urlparse, urljoin
+from urllib.parse import urlparse
 from .is_same_domain import is_same_domain
-from .download_link import download_link
+from .logger_config import logger
 
 
 TAGS_AND_ATTRIBUTES = {
@@ -12,29 +10,25 @@ TAGS_AND_ATTRIBUTES = {
 }
 
 
-def add_scheme(url, parent_domain):
-    url = urlparse(url)
-    if not url.scheme:
-        url = urljoin(parent_domain.geturl(), url.path)
-        return url
-    return url.geturl()
-
-
-def page_parse(response, download_folder, parent_domain):
+def get_link_for_download(page_data, parent_domain):
+    parent_domain = urlparse(parent_domain)
 
     def get_link(search_tag, atr):
         tags = page_data.find_all(search_tag)
         for tag in tags:
             link = tag.get(atr)
             if is_same_domain(link, parent_domain):
-                link = add_scheme(link, parent_domain)
-                new_name = download_link(link, download_folder)
-                name_download_folder = os.path.basename(download_folder)
-                tag[atr] = os.path.join(name_download_folder, new_name)
-
-    page_data = BeautifulSoup(response.content, 'html.parser')
+                link_for_download.append((link, search_tag, atr))
+    link_for_download = []
     for tag, attrs in TAGS_AND_ATTRIBUTES.items():
         for attr in attrs:
             get_link(tag, attr)
-    page_data = page_data.prettify()
-    return page_data
+    return link_for_download
+
+
+def changed_link(data, search_tag, atr, old_link, new_link):
+    tags = data.find_all(search_tag)
+    for tag in tags:
+        if tag.get(atr) == old_link:
+            logger.debug(f'Link {tag[atr]} changed on {new_link}')
+            tag[atr] = new_link

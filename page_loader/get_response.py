@@ -22,5 +22,5 @@ def get_response(page_url):
         logger.exception(str(err))
         raise requests.exceptions.RequestException('Other request exceptions occurred')
     else:
-        logger.debug(f'Code status {r.status_code}')
+        logger.debug(f'Code status {r.status_code} for {page_url}')
         return r

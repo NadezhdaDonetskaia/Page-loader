@@ -57,20 +57,6 @@ def test_folder_not_exist():
     assert str(e.value) == f'Folder {directory} is not exist, try again'
 
 
-errors = [
-    (404, 'HTTP Error occurred'),
-    (503, 'HTTP Error occurred'),
-]
-
-
-@pytest.mark.parametrize('status_code, err_val', errors)
-def test_status_code(status_code, err_val, tmpdir, requests_mock):
-    with pytest.raises(Exception) as error:
-        requests_mock.get(page_url, status_code=status_code)
-        download(page_url, tmpdir)
-    assert str(error.value) == err_val
-
-
 exc = [
     (Timeout, 'Connect or Read Timeout!'),
     (ConnectionError, 'A Connection error occurred'),
