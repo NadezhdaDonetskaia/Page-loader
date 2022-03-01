@@ -1,4 +1,8 @@
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin
+
+
+def make_absolute_url(url, parent_domain):
+    return urljoin(parent_domain, url)
 
 
 def is_same_domain(url, parent_domain):

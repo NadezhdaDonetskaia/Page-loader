@@ -1,5 +1,5 @@
 from urllib.parse import urlparse
-from .is_same_domain import is_same_domain
+from .url import is_same_domain
 from .logger_config import logger
 
 
@@ -10,7 +10,7 @@ TAGS_AND_ATTRIBUTES = {
 }
 
 
-def get_link_for_download(page_data, parent_domain):
+def get_links_for_download(page_data, parent_domain):
     parent_domain = urlparse(parent_domain)
 
     def get_link(search_tag, atr):
@@ -23,12 +23,12 @@ def get_link_for_download(page_data, parent_domain):
     for tag, attrs in TAGS_AND_ATTRIBUTES.items():
         for attr in attrs:
             get_link(tag, attr)
-    return link_for_download
+    return set(link_for_download)
 
 
-def changed_link(data, search_tag, atr, old_link, new_link):
-    tags = data.find_all(search_tag)
+def replace_links(page_data, search_tag, attr, old_link, new_link):
+    tags = page_data.find_all(search_tag)
     for tag in tags:
-        if tag.get(atr) == old_link:
-            logger.debug(f'Link {tag[atr]} changed on {new_link}')
-            tag[atr] = new_link
+        if tag.get(attr) == old_link:
+            logger.debug(f'Link {tag[attr]} changed on {new_link}')
+            tag[attr] = new_link
