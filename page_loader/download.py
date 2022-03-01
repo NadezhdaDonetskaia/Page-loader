@@ -1,9 +1,8 @@
 import os
 from bs4 import BeautifulSoup
 from progress.bar import Bar
-from .file import get_file_name
 from .page_parse import get_links_for_download
-from .folder import get_folder_name
+from .name_getter import get_folder_name, get_file_name
 from .response import get_response
 from .download_link import download_link
 from .url import make_absolute_url

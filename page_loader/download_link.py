@@ -1,5 +1,5 @@
 import os
-from .file import get_file_name
+from .name_getter import get_file_name
 from .response import get_response
 from .logger_config import logger
 
